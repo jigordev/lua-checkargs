@@ -19,35 +19,40 @@ local function check(use_error, condition, message)
     end
 end
 
-function checkargs.check_arg(func, name, expected, value, optional, use_error)
+function checkargs.check_arg(func, name, expected, value, optional, default, use_error)
     check(use_error, contains(expected, type(value)) or (optional and value == nil),
         string.format("Error in %s: Argument '%s' must be a %s, got: %s", func, name, table.concat(expected, ", "),
             type(value)))
+    return value or default
 end
 
 function checkargs.check_list(func, name, expected, list, optional, use_error)
+    local args = {}
     for _, arg in ipairs(list) do
-        checkargs.check_arg(func, name, expected, arg, optional, use_error)
+        table.insert(args, checkargs.check_arg(func, name, expected, arg, optional, use_error))
     end
+    return args
 end
 
-function checkargs.check_range(func, name, value, min, max, use_error)
+function checkargs.check_range(func, name, value, min, max, default, use_error)
     check(use_error, type(value) == "number",
         string.format("Error in %s: Argument '%s' must be a number, got: %s", func, name, type(value)))
     check(use_error, value >= min and value <= max,
         string.format("Error in %s: Argument '%s' must be between %d and %d, got: %d", func, name, min, max, value))
+    return value or default
 end
 
-function checkargs.check_fields(func, name, tbl, fields, use_error)
+function checkargs.check_fields(func, name, tbl, fields, default, use_error)
     check(use_error, type(tbl) == "table",
         string.format("Error in %s: Argument '%s' must be a table, got: %s", func, name, type(tbl)))
     for _, field in ipairs(fields) do
         check(use_error, tbl[field] ~= nil,
             string.format("Error in %s: Table '%s' must contain field '%s'", func, name, field))
     end
+    return tbl or default
 end
 
-function checkargs.check_composite(func, name, value, expected_fields, use_error)
+function checkargs.check_composite(func, name, value, expected_fields, default, use_error)
     check(use_error, type(value) == "table",
         string.format("Error in %s: Argument '%s' must be a table, got: %s", func, name, type(value)))
     for field, field_type in pairs(expected_fields) do
@@ -55,10 +60,12 @@ function checkargs.check_composite(func, name, value, expected_fields, use_error
             string.format("Error in %s: Field '%s' in argument '%s' must be a %s, got: %s", func, field, name, field_type,
                 type(value[field])))
     end
+    return value or default
 end
 
-function checkargs.check_not_nil(func, name, value, use_error)
+function checkargs.check_not_nil(func, name, value, default, use_error)
     check(use_error, value ~= nil, string.format("Error in %s: Argument '%s' must not be nil", func, name))
+    return value or default
 end
 
 return checkargs
