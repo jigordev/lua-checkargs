@@ -26,10 +26,10 @@ function checkargs.check_arg(func, name, expected, value, optional, default, use
     return value or default
 end
 
-function checkargs.check_list(func, name, expected, list, optional, use_error)
+function checkargs.check_list(func, name, expected, list, optional, default, use_error)
     local args = {}
     for _, arg in ipairs(list) do
-        table.insert(args, checkargs.check_arg(func, name, expected, arg, optional, use_error))
+        table.insert(args, checkargs.check_arg(func, name, expected, arg, optional, default, use_error))
     end
     return args
 end
