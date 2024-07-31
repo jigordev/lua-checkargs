@@ -14,22 +14,22 @@ luarocks install lua-checkargs
 
 ### Functions
 
-#### check_arg(func, name, expected, value, optional, use_error)
+#### check_arg(func, name, expected, value, optional, default, use_error)
 Validates a single argument `value` against expected types `expected`. Throws an error if validation fails when `use_error` is `true`.
 
-#### check_list(func, name, expected, list, optional, use_error)
+#### check_list(func, name, expected, list, optional, default, use_error)
 Validates each element in `list` against expected types `expected`. Throws an error if any element fails validation when `use_error` is `true`.
 
-#### check_range(func, name, value, min, max, use_error)
+#### check_range(func, name, value, min, max, default, use_error)
 Validates a numeric `value` to ensure it falls within the specified range `[min, max]`. Throws an error if validation fails when `use_error` is `true`.
 
-#### check_fields(func, name, tbl, fields, use_error)
+#### check_fields(func, name, tbl, fields, default, use_error)
 Validates that table `tbl` contains all specified `fields`. Throws an error if any field is missing when `use_error` is `true`.
 
-#### check_composite(func, name, value, expected_fields, use_error)
+#### check_composite(func, name, value, expected_fields, default, use_error)
 Validates a table `value` against expected field types specified in `expected_fields`. Throws an error if any field type mismatch is found when `use_error` is `true`.
 
-#### check_not_nil(func, name, value, use_error)
+#### check_not_nil(func, name, value, default, use_error)
 Validates that `value` is not `nil`. Throws an error if `value` is `nil` when `use_error` is `true`.
 
 ### Example
